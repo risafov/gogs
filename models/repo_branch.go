@@ -55,3 +55,10 @@ func (br *Branch) GetCommit() (*git.Commit, error) {
 	}
 	return gitRepo.GetBranchCommit(br.Name)
 }
+
+// ProtectBranch contains attributes of a protected branch.
+type ProtectBranch struct {
+	Name               string
+	Protected          bool
+	RequirePullRequest bool
+}

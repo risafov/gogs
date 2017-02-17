@@ -435,9 +435,14 @@ func runWeb(ctx *cli.Context) error {
 			m.Combo("").Get(repo.Settings).
 				Post(bindIgnErr(auth.RepoSettingForm{}), repo.SettingsPost)
 			m.Group("/collaboration", func() {
-				m.Combo("").Get(repo.Collaboration).Post(repo.CollaborationPost)
+				m.Combo("").Get(repo.SettingsCollaboration).Post(repo.SettingsCollaborationPost)
 				m.Post("/access_mode", repo.ChangeCollaborationAccessMode)
 				m.Post("/delete", repo.DeleteCollaboration)
+			})
+			m.Group("/branches", func() {
+				m.Get("", repo.SettingsBranches)
+				m.Post("/default_branch", repo.UpdateDefaultBranch)
+				m.Combo("/*").Get(repo.SettingsProtectedBranch)
 			})
 
 			m.Group("/hooks", func() {
@@ -452,15 +457,15 @@ func runWeb(ctx *cli.Context) error {
 				m.Post("/slack/:id", bindIgnErr(auth.NewSlackHookForm{}), repo.SlackHooksEditPost)
 
 				m.Group("/git", func() {
-					m.Get("", repo.GitHooks)
-					m.Combo("/:name").Get(repo.GitHooksEdit).
-						Post(repo.GitHooksEditPost)
+					m.Get("", repo.SettingsGitHooks)
+					m.Combo("/:name").Get(repo.SettingsGitHooksEdit).
+						Post(repo.SettingsGitHooksEditPost)
 				}, context.GitHookService())
 			})
 
 			m.Group("/keys", func() {
-				m.Combo("").Get(repo.DeployKeys).
-					Post(bindIgnErr(auth.AddSSHKeyForm{}), repo.DeployKeysPost)
+				m.Combo("").Get(repo.SettingsDeployKeys).
+					Post(bindIgnErr(auth.AddSSHKeyForm{}), repo.SettingsDeployKeysPost)
 				m.Post("/delete", repo.DeleteDeployKey)
 			})
 
